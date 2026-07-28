@@ -1,0 +1,39 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  align-items: center;
+  color: white;
+  display: flex;
+  font: 700 14px sans-serif;
+  justify-content: center;
+  user-select: none;
+}
+
+body.paddle {
+  background: #111;
+}
+
+body.player {
+  background: #2563eb;
+}
+
+body.ai {
+  background: #dc2626;
+}
+
+body.ball {
+  background: #111827;
+  border-radius: 999px;
+}
+
+body.sample {
+  background: #166534;
+  box-sizing: border-box;
+  padding: 10px;
+  text-align: center;
+}
