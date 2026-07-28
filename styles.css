@@ -1,0 +1,17 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  align-items: center;
+  background: white;
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  font: 16px sans-serif;
+  padding: 8px 16px;
+}
