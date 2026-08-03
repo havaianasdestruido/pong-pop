@@ -201,52 +201,17 @@ window.addEventListener("keyup", (event) => {
   if ((key === "arrowdown" || key === "s") && playerDirection > 0) playerDirection = 0;
 });
 
-window.addEventListener("keydown", (event) => {
-  const key = event.key.toLowerCase();
-
-  if (key === "arrowup" || key === "w") {
-    playerDirection = -1;
-    event.preventDefault();
-  }
-
-  if (key === "arrowdown" || key === "s") {
-    playerDirection = 1;
-    event.preventDefault();
-  }
-});
-
-window.addEventListener("keyup", (event) => {
-  const key = event.key.toLowerCase();
-
-  if ((key === "arrowup" || key === "w") && playerDirection < 0)
-    playerDirection = 0;
-
-  if ((key === "arrowdown" || key === "s") && playerDirection > 0)
-    playerDirection = 0;
-});
-
-window.addEventListener("message", (event) => {
-  if (!event.data || event.data.type !== "key") return;
-
-  const key = event.data.key.toLowerCase();
-
-  if (event.data.down) {
-    if (key === "arrowup" || key === "w")
-      playerDirection = -1;
-
-    if (key === "arrowdown" || key === "s")
-      playerDirection = 1;
-  } else {
-    if ((key === "arrowup" || key === "w") && playerDirection < 0)
-      playerDirection = 0;
-
-    if ((key === "arrowdown" || key === "s") && playerDirection > 0)
-      playerDirection = 0;
-  }
-});
-
 window.addEventListener("beforeunload", closeWindows);
 playButton.addEventListener("click", play);
 
-window.addEventListener("beforeunload", closeWindows);
-playButton.addEventListener("click", play);
+window.addEventListener("message",e=>{
+ if(!e.data||e.data.type!=="key")return;
+ const k=e.data.key.toLowerCase();
+ if(e.data.down){
+  if(k==="w"||k==="arrowup")playerDirection=-1;
+  if(k==="s"||k==="arrowdown")playerDirection=1;
+ }else{
+  if((k==="w"||k==="arrowup")&&playerDirection<0)playerDirection=0;
+  if((k==="s"||k==="arrowdown")&&playerDirection>0)playerDirection=0;
+ }
+});

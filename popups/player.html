@@ -1,45 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Player</title>
-<link rel="stylesheet" href="../popup.css">
-</head>
-
-<body class="paddle player" tabindex="0">
-YOU
-
-<script>
-function send(key, down) {
-  if (window.opener && !window.opener.closed) {
-    window.opener.postMessage({
-      type: "key",
-      key,
-      down
-    }, "*");
-  }
-}
-
-window.addEventListener("load", () => {
-  window.focus();
-  document.body.focus();
-});
-
-window.addEventListener("mousedown", () => {
-  window.focus();
-  document.body.focus();
-});
-
-window.addEventListener("keydown", (e) => {
-  send(e.key, true);
-  e.preventDefault();
-});
-
-window.addEventListener("keyup", (e) => {
-  send(e.key, false);
-  e.preventDefault();
-});
-</script>
-
-</body>
-</html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Player</title><link rel="stylesheet" href="../popup.css"></head><body class="paddle player" tabindex="0">YOU<script>
+function s(k,d){if(opener&&!opener.closed)opener.postMessage({type:"key",key:k,down:d},"*")}
+addEventListener("load",()=>{focus();document.body.focus()});
+addEventListener("keydown",e=>{s(e.key,true);e.preventDefault()});
+addEventListener("keyup",e=>{s(e.key,false);e.preventDefault()});
+</script></body></html>
