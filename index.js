@@ -6,6 +6,8 @@ const BALL_SIZE = 92;
 const EDGE_MARGIN = 80;
 const PLAYER_SPEED = 720;
 const AI_SPEED = 560;
+const AI_DEADZONE = 32;
+const AI_FOLLOW_RESPONSE = 8;
 const BALL_SPEED_X = 520;
 const BALL_SPEED_Y = 360;
 const MAX_DT = 0.05;
@@ -17,6 +19,7 @@ let playerDirection = 0;
 let score = { player: 0, ai: 0 };
 let windows = null;
 let state = null;
+let lastRenderPositions = null;
 
 function popupFeatures(width, height, x, y) {
   return [
@@ -77,6 +80,7 @@ function play() {
   }
 
   windows.player.location.replace("./popups/player.html");
+  lastRenderPositions = null;
   state = {
     bounds,
     playerY: midY - PADDLE_HEIGHT / 2,
@@ -129,12 +133,14 @@ function update(dt) {
 
   state.playerY = clamp(state.playerY + playerDirection * PLAYER_SPEED * dt, minY, maxY);
 
-  const aiCenter = state.aiY + PADDLE_HEIGHT / 2;
   const ballCenter = state.ballY + BALL_SIZE / 2;
-  const aiOffset = ballCenter - aiCenter;
-  const aiDeadzone = BALL_SIZE / 2;
-  const aiDirection = Math.abs(aiOffset) > aiDeadzone ? Math.sign(aiOffset) : 0;
-  state.aiY = clamp(state.aiY + aiDirection * AI_SPEED * dt, minY, maxY);
+  const aiTargetY = ballCenter - PADDLE_HEIGHT / 2;
+  const aiOffset = aiTargetY - state.aiY;
+
+  if (Math.abs(aiOffset) > AI_DEADZONE) {
+    const aiStep = clamp(aiOffset * AI_FOLLOW_RESPONSE * dt, -AI_SPEED * dt, AI_SPEED * dt);
+    state.aiY = clamp(state.aiY + aiStep, minY, maxY);
+  }
 
   state.ballX += state.ballVX * dt;
   state.ballY += state.ballVY * dt;
@@ -185,11 +191,25 @@ function resetBall(direction) {
   document.title = `Popup Pong ${score.player}-${score.ai}`;
 }
 
+function moveWindow(windowRef, key, x, y) {
+  const nextX = Math.round(x);
+  const nextY = Math.round(y);
+  const previous = lastRenderPositions?.[key];
+
+  if (previous && previous.x === nextX && previous.y === nextY) return;
+
+  windowRef.moveTo(nextX, nextY);
+  lastRenderPositions = {
+    ...lastRenderPositions,
+    [key]: { x: nextX, y: nextY },
+  };
+}
+
 function render() {
   const aiX = state.bounds.left + state.bounds.width - EDGE_MARGIN - PADDLE_WIDTH;
-  windows.player.moveTo(state.bounds.left + EDGE_MARGIN, state.playerY);
-  windows.ai.moveTo(aiX, state.aiY);
-  windows.ball.moveTo(state.ballX, state.ballY);
+  moveWindow(windows.player, "player", state.bounds.left + EDGE_MARGIN, state.playerY);
+  moveWindow(windows.ai, "ai", aiX, state.aiY);
+  moveWindow(windows.ball, "ball", state.ballX, state.ballY);
 }
 
 window.addEventListener("keydown", (event) => {
