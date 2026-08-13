@@ -131,7 +131,9 @@ function update(dt) {
 
   const aiCenter = state.aiY + PADDLE_HEIGHT / 2;
   const ballCenter = state.ballY + BALL_SIZE / 2;
-  const aiDirection = Math.sign(ballCenter - aiCenter);
+  const aiOffset = ballCenter - aiCenter;
+  const aiDeadzone = BALL_SIZE / 2;
+  const aiDirection = Math.abs(aiOffset) > aiDeadzone ? Math.sign(aiOffset) : 0;
   state.aiY = clamp(state.aiY + aiDirection * AI_SPEED * dt, minY, maxY);
 
   state.ballX += state.ballVX * dt;
