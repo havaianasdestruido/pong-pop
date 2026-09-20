@@ -80,6 +80,8 @@ function play() {
   }
 
   windows.player.location.replace("./popups/player.html");
+  score = { player: 0, ai: 0 };
+  updateScore();
   lastRenderPositions = null;
   state = {
     bounds,
@@ -92,7 +94,6 @@ function play() {
   };
 
   running = true;
-  playButton.textContent = "Play";
   lastTimestamp = performance.now();
   rafId = requestAnimationFrame(tick);
 }
@@ -188,6 +189,11 @@ function resetBall(direction) {
   state.ballY = state.bounds.top + state.bounds.height / 2 - BALL_SIZE / 2;
   state.ballVX = BALL_SPEED_X * direction;
   state.ballVY = BALL_SPEED_Y * (Math.random() > 0.5 ? 1 : -1);
+  updateScore();
+}
+
+function updateScore() {
+  playButton.textContent = `${score.player} - ${score.ai}`;
   document.title = `Popup Pong ${score.player}-${score.ai}`;
 }
 
